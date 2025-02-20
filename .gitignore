@@ -1,41 +1,726 @@
-# Compiled Lua sources
-luac.out
+local Players = game.Players
+local Player = Players.LocalPlayer
+local Gui = Instance.new("ScreenGui", Player.PlayerGui)
+local Frame = Instance.new("Frame", Gui)
+local TextLabel = Instance.new("TextLabel", Frame)
+local TextButton = Instance.new("TextButton", Frame)
+local UiCorner2 = Instance.new("UICorner", TextButton)
+local TextBox = Instance.new("TextBox", Frame)
+local SpeedText = Instance.new("TextLabel", Frame)
+local JumpText = Instance.new("TextLabel", Frame)
+local JumpBox = Instance.new("TextBox", Frame)
+local JumpButton = Instance.new("TextButton", Frame)
+local UiCorner3 = Instance.new("UICorner", JumpButton)
+local CloseButton = Instance.new("TextButton", Frame)
+local UiCorner4 = Instance.new("UICorner", CloseButton)
+local IntValue = Instance.new("IntValue", Frame)
+local ExtandButton = Instance.new("TextButton", Gui)
+local BigButton = Instance.new("TextButton", Gui)
+local PageOne = Instance.new("TextButton", Gui)
+local PageTwo = Instance.new("TextButton", Gui)
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+local UserInputService = game:GetService("UserInputService")
+local character = Player.Character
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+local frame = Frame
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+local dragging = false
+local dragInput, mousePos, framePos
 
-# Precompiled Headers
-*.gch
-*.pch
+Gui.Name = "CapyHub"
+Frame.Name = "CapyFrame"
+TextLabel.Name = "CapyHub"
+TextButton.Name = "Apply"
+TextBox.Name = "Speed"
+SpeedText.Name = "SpeedText"
+JumpText.Name = "JumpText"
+JumpBox.Name = "JumpBox"
+JumpButton.Name = "JumpButton"
+CloseButton.Name = "CloseButton"
+IntValue.Name = "PageNumber"
+ExtandButton.Name = "ExtandButton"
+BigButton.Name = "BigButton"
+PageOne.Name = "PageOne"
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+Gui.IgnoreGuiInset = true
+Gui.Enabled = true
+Gui.ResetOnSpawn = true
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+local UiCorner5 = Instance.new("UICorner", ExtandButton)
+local UiCorner6 = Instance.new("UICorner", BigButton)
+local UiCorner6 = Instance.new("UICorner", PageOne)
+local UiCorner6 = Instance.new("UICorner", PageTwo)
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+PageOne.Text = "Page 1"
+PageOne.Position = UDim2.new(0.927, 0,0.906, 0)
+PageOne.Size = UDim2.new(0, 30,0, 31)
+PageOne.TextScaled = true
+PageOne.Font = Enum.Font.Cartoon
 
+BigButton.Text = "+"
+BigButton.Position = UDim2.new(0.974, 0,0.955, 0)
+BigButton.Size = UDim2.new(-0.017, 0,0.031, 0)
+BigButton.TextScaled = true
+BigButton.Font = Enum.Font.Cartoon
+BigButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+BigButton.BackgroundColor3 = Color3.fromRGB(47, 255, 0)
+
+ExtandButton.Text = "-"
+ExtandButton.Position = UDim2.new(0.949, 0,0.955, 0)
+ExtandButton.Size = UDim2.new(-0.017, 0,0.031, 0)
+ExtandButton.TextScaled = true
+ExtandButton.Font = Enum.Font.Cartoon
+ExtandButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExtandButton.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
+
+CloseButton.Text = "X"
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
+CloseButton.Size = UDim2.new(0, 54,0, 52)
+CloseButton.Position = UDim2.new(0.907, 0,-0.076, 0)
+CloseButton.TextScaled = true
+CloseButton.Font = Enum.Font.Highway
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Rotation = 15
+
+JumpButton.Text = "Apply!"
+JumpButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+JumpButton.Size = UDim2.new(0, 121,0, 22)
+JumpButton.Position = UDim2.new(0.031, 0,0.473, 0)
+JumpButton.TextScaled = true
+JumpButton.Font = Enum.Font.Highway
+
+JumpBox.Text = "Enter JumpPower"
+JumpBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+JumpBox.Font = Enum.Font.Cartoon
+JumpBox.Size = UDim2.new(0, 121,0, 24)
+JumpBox.Position = UDim2.new(0.034, 0,0.402, 0)
+JumpBox.TextScaled = true
+JumpBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+local UiCorner = Instance.new("UICorner", JumpBox)
+
+JumpText.Text = "Enter JumpPower"
+JumpText.TextColor3 = Color3.fromRGB(255, 255, 255)
+JumpText.Font = Enum.Font.Cartoon
+JumpText.Size = UDim2.new(0, 200,0, 15)
+JumpText.Position = UDim2.new(-0.078, 0,0.351, 0)
+JumpText.TextScaled = true
+JumpText.BackgroundTransparency = 1
+
+TextBox.Text = "Enter Speed"
+TextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextBox.Font = Enum.Font.Cartoon
+TextBox.Size = UDim2.new(0, 121,0, 24)
+TextBox.Position = UDim2.new(0.034, 0,0.201, 0)
+TextBox.TextScaled = true
+TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+local UiCorner = Instance.new("UICorner", TextBox)
+
+SpeedText.Text = "Change Player Speed!"
+SpeedText.TextScaled = true
+SpeedText.Size = UDim2.new(0, 200,0, 15)
+SpeedText.Position = UDim2.new(-0.075, 0,0.15, 0)
+SpeedText.Font = Enum.Font.Highway
+SpeedText.BackgroundTransparency = 1
+SpeedText.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+TextButton.Text = "Apply!"
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.Size = UDim2.new(0, 121,0, 22)
+TextButton.Position = UDim2.new(0.037, 0,0.274, 0)
+TextButton.TextScaled = true
+TextButton.Font = Enum.Font.Highway
+
+TextLabel.Text = "CapyHub"
+TextLabel.BackgroundTransparency = 1
+TextLabel.Font = Enum.Font.Cartoon
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.Size = UDim2.new(1, 0,0.103, 0)
+TextLabel.TextScaled = true
+
+BigButton.MouseButton1Click:Connect(function()
+Frame.Visible = true
+end)
+
+ExtandButton.MouseButton1Click:Connect(function()
+Frame.Visible = false
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+script.Parent.CapyHub:Destroy()
+end)
+
+Frame.Size = UDim2.new(0, 349, 0, 431) -- 200x200 boyutunda bir kare
+Frame.Position = UDim2.new(0.1, -100, 0.3, -100) -- Ekranın ortasına koyma
+Frame.BackgroundColor3 = Color3.fromRGB(132, 132, 132) -- Yeşil renk
+local UiCorner = Instance.new("UICorner", Frame)
+
+TextButton.MouseButton1Click:Connect(function()
+local speed = tonumber(TextBox.Text)
+
+if speed and speed > 0 then
+	humanoid.WalkSpeed = speed
+else
+	TextBox.Text = "Invalid Value!"
+	TextBox.TextColor3 = Color3.fromRGB(255, 0, 4)
+	wait(1.5)
+	TextBox.Text = "Enter Speed"
+	TextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+end
+
+end)
+
+PageOne.MouseButton1Click:Connect(function()
+IntValue.Value = 1
+end)
+
+JumpButton.MouseButton1Click:Connect(function()
+local Jump = tonumber(JumpBox.Text)
+
+if Jump and Jump >= 0 then
+	humanoid.JumpHeight = Jump
+else
+	JumpBox.Text = "Invalid Value!"
+	JumpBox.TextColor3 = Color3.fromRGB(255, 0, 4)
+	wait(1.5)
+	JumpBox.Text = "Enter JumpPower!"
+	JumpBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+end
+
+end)
+
+frame.InputBegan:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
+dragging = true
+mousePos = input.Position
+framePos = frame.Position
+
+	input.Changed:Connect(function()
+		if input.UserInputState == Enum.UserInputState.End then
+			dragging = false
+		end
+	end)
+end
+
+end)
+
+frame.InputChanged:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseMovement then
+dragInput = input
+end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+if input == dragInput and dragging then
+local delta = input.Position - mousePos
+frame.Position = UDim2.new(
+framePos.X.Scale, framePos.X.Offset + delta.X,
+framePos.Y.Scale, framePos.Y.Offset + delta.Y
+)
+end
+end)
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+
+-- GUI oluşturma
+
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 102,0, 51)
+toggleButton.Position = UDim2.new(0.029, 0,0.664, 0)
+toggleButton.Text = "Unlimited Jump OFF"
+toggleButton.Parent = Frame
+local UiCorner = Instance.new("UICorner", toggleButton)
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.TextScaled = true
+
+-- Sınırsız zıplama değişkenleri
+local unlimitedJumpEnabled = false
+local jumpConnection = nil
+local humanoid = nil
+
+-- Karakter ve humanoid referanslarını güncelleyen fonksiyon
+local function setupCharacter(character)
+humanoid = character:WaitForChild("Humanoid")
+-- Eğer sınırsız zıplama zaten açıksa, yeniden bağlantı kur
+if unlimitedJumpEnabled then
+if jumpConnection then
+jumpConnection:Disconnect()
+jumpConnection = nil
+end
+jumpConnection = UserInputService.JumpRequest:Connect(function()
+if humanoid then
+humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+end
+end)
+end
+end
+
+-- İlk karakteri ayarla
+if player.Character then
+setupCharacter(player.Character)
+end
+
+player.CharacterAdded:Connect(function(character)
+setupCharacter(character)
+end)
+
+-- Buton tıklama olayını ayarla
+toggleButton.MouseButton1Click:Connect(function()
+unlimitedJumpEnabled = not unlimitedJumpEnabled
+if unlimitedJumpEnabled then
+toggleButton.Text = "Unlimited Jump ON"
+-- Önce var olan bağlantıyı keselim
+if jumpConnection then
+jumpConnection:Disconnect()
+jumpConnection = nil
+end
+jumpConnection = UserInputService.JumpRequest:Connect(function()
+if humanoid then
+humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+end
+end)
+else
+toggleButton.Text = "Unlimited Jump OFF"
+if jumpConnection then
+jumpConnection:Disconnect()
+jumpConnection = nil
+end
+end
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 102,0, 41)
+toggleButton.Position = UDim2.new(0.029, 0,0.551, 0)
+toggleButton.Text = "Click To Tp:Disabled"
+toggleButton.Parent = Frame
+local UiCorner = Instance.new("UICorner", toggleButton)
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.TextScaled = true
+
+local teleportEnabled = false
+
+-- Butona basıldığında modu toggle et
+toggleButton.MouseButton1Click:Connect(function()
+teleportEnabled = not teleportEnabled
+if teleportEnabled then
+toggleButton.Text = "Click To Tp:Enabled"
+else
+toggleButton.Text = "Click To Tp:Disabled"
+end
+end)
+
+-- Fare sol tıklaması ile ışınlanma
+mouse.Button1Down:Connect(function()
+if teleportEnabled then
+local targetPos = mouse.Hit.p -- Tıklanan yerin pozisyonu
+local character = player.Character
+if character and character:FindFirstChild("HumanoidRootPart") then
+-- Karakteri hedef pozisyona ışınla
+character.HumanoidRootPart.CFrame = CFrame.new(targetPos)
+end
+end
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- GUI Oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+-- TextBox Oluşturma
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0, 143,0, 20)
+textBox.Position = UDim2.new(0.56, 0,0.402, 0)
+textBox.Text = "" -- Başlangıçta boş
+textBox.PlaceholderText = "Player Name" -- İsteğe bağlı ipucu metni
+textBox.Parent = Frame
+local UiCorner = Instance.new("UICorner", textBox)
+textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+textBox.TextScaled = true
+
+-- TextButton Oluşturma (Kill Butonu)
+local killButton = Instance.new("TextButton")
+killButton.Size = UDim2.new(0, 143,0, 19)
+killButton.Position = UDim2.new(0.56, 0,0.478, 0)
+killButton.Text = "Kill (Only you can see)"
+killButton.Parent = Frame
+local UiCorner = Instance.new("UICorner", killButton)
+killButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+killButton.TextScaled = true
+
+-- Butona basıldığında çalışacak kod
+killButton.MouseButton1Click:Connect(function()
+local targetName = textBox.Text -- TextBox'a girilen oyuncu ismi
+local targetPlayer = Players:FindFirstChild(targetName)
+
+if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+	-- Eğer oyuncu bulunursa, hedef oyuncunun Humanoid'inin Health'ini sıfırla
+	targetPlayer.Character.Humanoid.Health = 0
+else
+	-- Oyuncu bulunamazsa TextBox'a "Invalid Name!" yaz
+	textBox.Text = "Invalid Name!"
+end
+
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- Karakter ve HumanoidRootPart referansı
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRoot = character:WaitForChild("HumanoidRootPart")
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+-- TextBox oluşturma
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0, 143,0, 20)
+textBox.Position = UDim2.new(0.563, 0,0.199, 0)
+textBox.PlaceholderText = "Player Name"
+textBox.Text = "Player Name"
+textBox.Parent = Frame
+textBox.TextScaled = true
+textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+local UiCorner = Instance.new("UICorner", textBox)
+
+-- Teleport Butonu oluşturma
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(0, 143,0, 19)
+teleportButton.Position = UDim2.new(0.563, 0,0.274, 0)
+teleportButton.Text = "Teleport"
+teleportButton.Parent = Frame
+teleportButton.TextScaled = true
+teleportButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+local UiCorner = Instance.new("UICorner", teleportButton)
+
+-- Buton tıklama olayında ışınlama işlemi
+teleportButton.MouseButton1Click:Connect(function()
+local targetName = textBox.Text
+local targetPlayer = Players:FindFirstChild(targetName)
+
+if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+	local targetPos = targetPlayer.Character.HumanoidRootPart.Position
+	humanoidRoot.CFrame = CFrame.new(targetPos)
+else
+	textBox.Text = "Invalid Name!"
+end
+
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- GUI oluşturma
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+local freezeButton = Instance.new("TextButton", Frame)
+freezeButton.Size = UDim2.new(0, 93,0, 43)
+freezeButton.Position = UDim2.new(0.366, 0,0.546, 0)
+freezeButton.Text = "Freeze:Disabled"
+freezeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+freezeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+freezeButton.Font = Enum.Font.Cartoon
+freezeButton.TextScaled = true
+
+local UiCorner = Instance.new("UICorner",freezeButton )
+
+local freezeEnabled = false
+
+freezeButton.MouseButton1Click:Connect(function()
+local character = player.Character
+if character then
+local rootPart = character:FindFirstChild("HumanoidRootPart")
+if rootPart then
+freezeEnabled = not freezeEnabled
+rootPart.Anchored = freezeEnabled -- Karakteri tamamen sabitler veya serbest bırakır
+
+		if freezeEnabled then
+			freezeButton.Text = "Freeze:Enabled"
+		else
+			freezeButton.Text = "Freeze:Disabled"
+		end
+	end
+end
+
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local workspace = game:GetService("Workspace")
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local workspace = game:GetService("Workspace")
+
+-- GUI oluşturma
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local workspace = game:GetService("Workspace")
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+local ultraVisionButton = Instance.new("TextButton")
+ultraVisionButton.Size = UDim2.new(0, 93,0, 51)
+ultraVisionButton.Position = UDim2.new(0.366, 0,0.664, 0)
+ultraVisionButton.Text = "UltraVision:Off"
+ultraVisionButton.Parent = Frame
+ultraVisionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ultraVisionButton.TextScaled = true
+
+local UiCorner = Instance.new("UICorner", ultraVisionButton)
+
+local ultraVisionEnabled = false
+local originalTransparency = {} -- Orijinal transparanlıkları saklamak için
+
+ultraVisionButton.MouseButton1Click:Connect(function()
+ultraVisionEnabled = not ultraVisionEnabled
+if ultraVisionEnabled then
+ultraVisionButton.Text = "UltraVision:On"
+
+	-- Workspace'deki tüm parçaları kontrol et
+	for _, obj in ipairs(workspace:GetDescendants()) do
+		if obj:IsA("BasePart") then
+			-- Eğer parça bir oyuncunun karakterine aitse atla
+			local parentModel = obj.Parent
+			if not (parentModel and parentModel:IsA("Model") and Players:GetPlayerFromCharacter(parentModel)) then
+				-- Orijinal transparanlık değerini sakla
+				originalTransparency[obj] = obj.Transparency
+				-- Parçanın transparanlığını 0.7 yap
+				local success = pcall(function()
+					obj.Transparency = 0.7
+				end)
+				if not success then
+					obj.Transparency = 1
+				end
+			end
+		end
+	end
+else
+	ultraVisionButton.Text = "UltraVision:Off"
+
+	-- Orijinal transparanlık değerlerini geri yükle
+	for part, trans in pairs(originalTransparency) do
+		if part and part:IsA("BasePart") then
+			part.Transparency = trans
+		end
+	end
+	originalTransparency = {} -- Tabloyu temizle
+end
+
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+local breakButton = Instance.new("TextButton")
+breakButton.Size = UDim2.new(0, 93,0, 51)
+breakButton.Position = UDim2.new(0.681, 0,0.664, 0)
+breakButton.Text = "Click To Break:Disabled"
+breakButton.Parent = Frame
+breakButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+breakButton.TextScaled = true
+
+local UiCorner = Instance.new("UICorner", breakButton)
+
+local clickToBreakEnabled = false
+
+-- Butona tıklayınca Click To Break modunu aç/kapat
+breakButton.MouseButton1Click:Connect(function()
+clickToBreakEnabled = not clickToBreakEnabled
+if clickToBreakEnabled then
+breakButton.Text = "Click To Break:Enabled"
+else
+breakButton.Text = "Click To Break:Disabled"
+end
+end)
+
+-- Oyuncu sol tıklarsa parçayı sil
+mouse.Button1Down:Connect(function()
+if clickToBreakEnabled then
+local target = mouse.Target -- Oyuncunun baktığı nesneyi al
+if target and target:IsA("BasePart") then
+target:Destroy()
+end
+end
+end)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+-- GUI oluşturma
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+local noclipButton = Instance.new("TextButton")
+noclipButton.Size = UDim2.new(0, 93,0, 43)
+noclipButton.Position = UDim2.new(0.681, 0,0.548, 0)
+noclipButton.Text = "Noclip:Disabled"
+noclipButton.Parent = Frame
+noclipButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+local UiCorner = Instance.new("UICorner", noclipButton)
+
+local noclipEnabled = false
+local noclipParts = {} -- Çarpışmasını kapattığımız parçaları saklayacağız
+
+-- Butona basınca noclip aç/kapat
+noclipButton.MouseButton1Click:Connect(function()
+noclipEnabled = not noclipEnabled
+noclipButton.Text = noclipEnabled and "Noclip:Enabled" or "Noclip:Disabled"
+
+if not noclipEnabled then
+	-- Noclip kapatılınca sadece önceden kapattığımız parçaları geri aç
+	for part, oldCollide in pairs(noclipParts) do
+		if part and part.Parent then
+			part.CanCollide = oldCollide
+		end
+	end
+	noclipParts = {} -- Listeyi sıfırla
+end
+
+end)
+
+-- Noclip loop (Sadece duvarları geçilebilir yap, zemini koru)
+RunService.Stepped:Connect(function()
+if noclipEnabled then
+for _, part in pairs(workspace:GetDescendants()) do
+if part:IsA("BasePart") and part.CanCollide then
+local isGround = part.Position.Y < humanoidRootPart.Position.Y - 2
+if not isGround then -- Sadece duvarları etkilesin
+noclipParts[part] = part.CanCollide
+part.CanCollide = false
+end
+end
+end
+end
+end)
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+-- GUI oluşturma
+Gui.Parent = player:WaitForChild("PlayerGui")
+
+local flyButton = Instance.new("TextButton")
+flyButton.Size = UDim2.new(0, 93,0, 48)
+flyButton.Position = UDim2.new(0.364, 0,0.813, 0)
+flyButton.Text = "Fly:Off"
+flyButton.Parent = Frame
+flyButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+local UiCorner = Instance.new("UICorner", flyButton)
+
+local flying = false
+local flyVelocity
+local speed = 50
+local verticalSpeed = 30
+local movement = {W = false, S = false, A = false, D = false, Space = false, Shift = false}
+
+-- Uçmayı aç/kapat
+flyButton.MouseButton1Click:Connect(function()
+flying = not flying
+flyButton.Text = flying and "Fly:On" or "Fly:Off"
+
+if flying then
+	humanoid.PlatformStand = true -- Karakterin yere düşmesini engelle
+
+	-- Hareket için BodyVelocity ekleme
+	flyVelocity = Instance.new("BodyVelocity")
+	flyVelocity.Velocity = Vector3.new(0, 0, 0)
+	flyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+	flyVelocity.Parent = humanoidRootPart
+else
+	humanoid.PlatformStand = false
+	if flyVelocity then
+		flyVelocity:Destroy()
+	end
+end
+
+end)
+
+-- Tuş girdilerini dinleme
+UserInputService.InputBegan:Connect(function(input, processed)
+if processed then return end
+if input.KeyCode == Enum.KeyCode.W then movement.W = true end
+if input.KeyCode == Enum.KeyCode.S then movement.S = true end
+if input.KeyCode == Enum.KeyCode.A then movement.A = true end
+if input.KeyCode == Enum.KeyCode.D then movement.D = true end
+if input.KeyCode == Enum.KeyCode.Space then movement.Space = true end
+if input.KeyCode == Enum.KeyCode.LeftShift then movement.Shift = true end
+end)
+
+UserInputService.InputEnded:Connect(function(input, processed)
+if processed then return end
+if input.KeyCode == Enum.KeyCode.W then movement.W = false end
+if input.KeyCode == Enum.KeyCode.S then movement.S = false end
+if input.KeyCode == Enum.KeyCode.A then movement.A = false end
+if input.KeyCode == Enum.KeyCode.D then movement.D = false end
+if input.KeyCode == Enum.KeyCode.Space then movement.Space = false end
+if input.KeyCode == Enum.KeyCode.LeftShift then movement.Shift = false end
+end)
+
+-- Uçuş yönünü sürekli güncelle
+RunService.RenderStepped:Connect(function()
+if flying and flyVelocity then
+local camera = workspace.CurrentCamera
+local direction = Vector3.new(0, 0, 0)
+
+	-- Karakterin yüzünü fareye döndürme
+	humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position, humanoidRootPart.Position + camera.CFrame.LookVector)
+
+	-- Hareket yönlerini belirleme
+	if movement.W then direction = direction + camera.CFrame.LookVector end
+	if movement.S then direction = direction - camera.CFrame.LookVector end
+	if movement.A then direction = direction - camera.CFrame.RightVector end
+	if movement.D then direction = direction + camera.CFrame.RightVector end
+	if movement.Space then direction = direction + Vector3.new(0, 1, 0) * verticalSpeed end
+	if movement.Shift then direction = direction - Vector3.new(0, 1, 0) * verticalSpeed end
+
+	-- Hareketi normalize edip hıza çarpıyoruz
+	if direction.Magnitude > 0 then
+		direction = direction.Unit * speed
+	end
+
+	flyVelocity.Velocity = direction
+end
+
+end)
